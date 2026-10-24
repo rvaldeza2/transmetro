@@ -1,0 +1,72 @@
+<div class="encabezado">
+  <h2>Estaciones</h2>
+  <a mat-flat-button routerLink="crear"><mat-icon>add</mat-icon> Nueva estación</a>
+</div>
+
+<mat-card appearance="outlined" class="tarjeta">
+  <mat-card-header>
+    <mat-card-title>Control de capacidad</mat-card-title>
+    <mat-card-subtitle>Alerta cuando los pasajeros alcanzan el 150% de la capacidad de las unidades</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="evaluacion" (ngSubmit)="evaluar()" class="fila">
+      <mat-form-field>
+        <mat-label>Estación</mat-label>
+        <mat-select formControlName="id_estacion">
+          @for (estacion of estaciones(); track estacion.id_estacion) {
+            <mat-option [value]="estacion.id_estacion">{{ estacion.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Pasajeros en la estación</mat-label>
+        <input matInput type="number" min="0" formControlName="pasajeros" />
+      </mat-form-field>
+      <button mat-flat-button type="submit">Evaluar</button>
+    </form>
+
+    @if (resultado(); as r) {
+      <p [class]="r.alerta ? 'alerta' : 'correcto'">{{ r.mensaje }}</p>
+      <p>
+        {{ r.estacion }}: {{ r.pasajeros }} pasajeros, {{ r.unidades }} unidades con capacidad total de
+        {{ r.capacidad_total }}
+        @if (r.porcentaje !== null) {
+          ({{ r.porcentaje }}%)
+        }
+      </p>
+    }
+  </mat-card-content>
+</mat-card>
+
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input matInput #filtro (input)="filtrar(filtro.value)" />
+</mat-form-field>
+
+<table mat-table [dataSource]="tabla" matSort>
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+    <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="municipalidad">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipalidad</th>
+    <td mat-cell *matCellDef="let e">{{ nombreMunicipalidad(e.id_municipalidad) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let e" class="acciones">
+      <a mat-icon-button [routerLink]="[e.id_estacion]"><mat-icon>visibility</mat-icon></a>
+      <a mat-icon-button [routerLink]="['editar', e.id_estacion]"><mat-icon>edit</mat-icon></a>
+      <button mat-icon-button (click)="eliminar(e)"><mat-icon>delete</mat-icon></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="columnas.length">No hay registros que coincidan con "{{ filtro.value }}"</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />

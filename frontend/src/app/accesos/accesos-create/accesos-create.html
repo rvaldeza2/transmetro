@@ -1,0 +1,62 @@
+<h2>{{ id ? 'Editar acceso' : 'Nuevo acceso' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error>El nombre es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Estación</mat-label>
+    <mat-select formControlName="id_estacion">
+      @for (estacion of estaciones(); track estacion.id_estacion) {
+        <mat-option [value]="estacion.id_estacion">{{ estacion.nombre }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>La estación es obligatoria</mat-error>
+  </mat-form-field>
+
+  @if (!id) {
+    <mat-form-field>
+      <mat-label>Guardia de seguridad</mat-label>
+      <mat-select formControlName="id_guardia">
+        @for (guardia of guardias(); track guardia.id_guardia) {
+          <mat-option [value]="guardia.id_guardia">{{ guardia.nombre }} ({{ guardia.turno }})</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Todo acceso debe tener al menos un guardia</mat-hint>
+      <mat-error>El guardia es obligatorio</mat-error>
+    </mat-form-field>
+  }
+
+  <div class="botones">
+    <a mat-button routerLink="/accesos">Cancelar</a>
+    <button mat-flat-button type="submit">Guardar</button>
+  </div>
+</form>
+
+@if (id) {
+  <h3>Guardias asignados</h3>
+  <mat-list>
+    @for (guardia of asignados(); track guardia.id_guardia) {
+      <mat-list-item>
+        <span matListItemTitle>{{ guardia.nombre }}</span>
+        <span matListItemLine>Turno {{ guardia.turno }} · desde {{ guardia.fecha_asignacion }}</span>
+        <button mat-icon-button matListItemMeta (click)="retirarGuardia(guardia)"><mat-icon>person_remove</mat-icon></button>
+      </mat-list-item>
+    }
+  </mat-list>
+
+  <div class="fila">
+    <mat-form-field>
+      <mat-label>Agregar guardia</mat-label>
+      <mat-select [formControl]="nuevoGuardia">
+        @for (guardia of disponibles(); track guardia.id_guardia) {
+          <mat-option [value]="guardia.id_guardia">{{ guardia.nombre }} ({{ guardia.turno }})</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button (click)="asignarGuardia()">Asignar</button>
+  </div>
+}

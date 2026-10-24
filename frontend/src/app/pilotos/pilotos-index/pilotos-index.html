@@ -1,0 +1,52 @@
+<div class="encabezado">
+  <h2>Pilotos</h2>
+  <a mat-flat-button routerLink="crear"><mat-icon>add</mat-icon> Nuevo piloto</a>
+</div>
+
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input matInput #filtro (input)="filtrar(filtro.value)" />
+</mat-form-field>
+
+<table mat-table [dataSource]="pilotos" matSort>
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+    <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="historial">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="historial_educativo">Historial educativo</th>
+    <td mat-cell *matCellDef="let p">{{ p.historial_educativo }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="residencia">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Residencia</th>
+    <td mat-cell *matCellDef="let p">{{ p.residencia }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="telefono">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+    <td mat-cell *matCellDef="let p">{{ p.telefono }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="bus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Bus</th>
+    <td mat-cell *matCellDef="let p">{{ placaBus(p.id_bus) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let p" class="acciones">
+      <a mat-icon-button [routerLink]="[p.id_piloto]"><mat-icon>visibility</mat-icon></a>
+      <a mat-icon-button [routerLink]="['editar', p.id_piloto]"><mat-icon>edit</mat-icon></a>
+      <button mat-icon-button (click)="eliminar(p)"><mat-icon>delete</mat-icon></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="columnas.length">No hay registros que coincidan con "{{ filtro.value }}"</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />

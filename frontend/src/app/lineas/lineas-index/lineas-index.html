@@ -1,0 +1,42 @@
+<div class="encabezado">
+  <h2>Líneas</h2>
+  <a mat-flat-button routerLink="crear"><mat-icon>add</mat-icon> Nueva línea</a>
+</div>
+
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input matInput #filtro (input)="filtrar(filtro.value)" />
+</mat-form-field>
+
+<table mat-table [dataSource]="lineas" matSort>
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+    <td mat-cell *matCellDef="let l">{{ l.nombre }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="municipalidad">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipalidad</th>
+    <td mat-cell *matCellDef="let l">{{ nombreMunicipalidad(l.id_municipalidad) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="distancia">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="distancia_total_km">Distancia total (km)</th>
+    <td mat-cell *matCellDef="let l">{{ l.distancia_total_km }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let l" class="acciones">
+      <a mat-icon-button [routerLink]="[l.id_linea]"><mat-icon>visibility</mat-icon></a>
+      <a mat-icon-button [routerLink]="['editar', l.id_linea]"><mat-icon>edit</mat-icon></a>
+      <button mat-icon-button (click)="eliminar(l)"><mat-icon>delete</mat-icon></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="columnas.length">No hay registros que coincidan con "{{ filtro.value }}"</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />

@@ -1,0 +1,37 @@
+<div class="encabezado">
+  <h2>Parqueos</h2>
+  <a mat-flat-button routerLink="crear"><mat-icon>add</mat-icon> Nuevo parqueo</a>
+</div>
+
+<mat-form-field>
+  <mat-label>Buscar</mat-label>
+  <input matInput #filtro (input)="filtrar(filtro.value)" />
+</mat-form-field>
+
+<table mat-table [dataSource]="parqueos" matSort>
+  <ng-container matColumnDef="ubicacion">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ubicación</th>
+    <td mat-cell *matCellDef="let p">{{ p.ubicacion }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="estacion">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Estación</th>
+    <td mat-cell *matCellDef="let p">{{ nombreEstacion(p.id_estacion) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let p" class="acciones">
+      <a mat-icon-button [routerLink]="[p.id_parqueo]"><mat-icon>visibility</mat-icon></a>
+      <a mat-icon-button [routerLink]="['editar', p.id_parqueo]"><mat-icon>edit</mat-icon></a>
+      <button mat-icon-button (click)="eliminar(p)"><mat-icon>delete</mat-icon></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="columnas.length">No hay registros que coincidan con "{{ filtro.value }}"</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />

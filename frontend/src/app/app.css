@@ -1,0 +1,19 @@
+.barra {
+  gap: 12px;
+}
+
+.contenedor {
+  height: calc(100% - 64px);
+}
+
+.menu {
+  width: 220px;
+}
+
+.contenido {
+  padding: 24px;
+}
+
+.espacio {
+  flex: 1;
+}

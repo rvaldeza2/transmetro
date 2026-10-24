@@ -1,0 +1,18 @@
+@if (bus(); as b) {
+  <div class="encabezado">
+    <h2>Bus {{ b.placa }}</h2>
+    <div class="fila">
+      <a mat-button [routerLink]="['/buses', 'editar', id]"><mat-icon>edit</mat-icon> Editar</a>
+      <a mat-button routerLink="/buses"><mat-icon>arrow_back</mat-icon> Volver</a>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-content>
+      <p><strong>Placa:</strong> {{ b.placa }}</p>
+      <p><strong>Capacidad:</strong> {{ b.capacidad }}</p>
+      <p><strong>Línea:</strong> {{ b.linea ?? 'Sin línea' }}</p>
+      <p><strong>Parqueo:</strong> {{ b.parqueo }}</p>
+    </mat-card-content>
+  </mat-card>
+}

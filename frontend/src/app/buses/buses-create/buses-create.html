@@ -1,0 +1,42 @@
+<h2>{{ id ? 'Editar bus' : 'Nuevo bus' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+  <mat-form-field>
+    <mat-label>Placa</mat-label>
+    <input matInput formControlName="placa" />
+    <mat-error>La placa es obligatoria</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Capacidad de pasajeros</mat-label>
+    <input matInput type="number" min="1" formControlName="capacidad" />
+    <mat-error>La capacidad debe ser mayor a 0</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Parqueo</mat-label>
+    <mat-select formControlName="id_parqueo">
+      @for (parqueo of parqueos(); track parqueo.id_parqueo) {
+        <mat-option [value]="parqueo.id_parqueo">{{ parqueo.ubicacion }}</mat-option>
+      }
+    </mat-select>
+    <mat-hint>Todo bus debe tener siempre un parqueo</mat-hint>
+    <mat-error>El parqueo es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Línea</mat-label>
+    <mat-select formControlName="id_linea">
+      <mat-option [value]="null">Sin línea</mat-option>
+      @for (linea of lineas(); track linea.id_linea) {
+        <mat-option [value]="linea.id_linea">{{ linea.nombre }}</mat-option>
+      }
+    </mat-select>
+    <mat-hint>Un bus solo puede estar en una línea a la vez</mat-hint>
+  </mat-form-field>
+
+  <div class="botones">
+    <a mat-button routerLink="/buses">Cancelar</a>
+    <button mat-flat-button type="submit">Guardar</button>
+  </div>
+</form>

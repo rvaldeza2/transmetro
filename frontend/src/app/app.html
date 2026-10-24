@@ -1,0 +1,27 @@
+@if (auth.usuario(); as usuario) {
+  <mat-toolbar class="barra">
+    <mat-icon>directions_bus</mat-icon>
+    <span>Sistema de Control del Transmetro</span>
+    <span class="espacio"></span>
+    <button mat-icon-button (click)="auth.logout()"><mat-icon>logout</mat-icon></button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="contenedor">
+    <mat-sidenav mode="side" opened class="menu">
+      <mat-nav-list>
+        @for (item of menu; track item.ruta) {
+          <a mat-list-item [routerLink]="item.ruta" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+            <mat-icon matListItemIcon>{{ item.icono }}</mat-icon>
+            <span matListItemTitle>{{ item.texto }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="contenido">
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+} @else {
+  <router-outlet />
+}

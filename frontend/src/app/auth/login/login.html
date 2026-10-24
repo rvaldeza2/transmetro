@@ -1,0 +1,30 @@
+<div class="login">
+  <mat-card appearance="outlined" class="tarjeta-login">
+    <mat-card-header>
+      <mat-card-title>Sistema de Control del Transmetro</mat-card-title>
+      <mat-card-subtitle>Inicie sesión para continuar</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="ingresar()" class="formulario">
+        <mat-form-field>
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="usuario" autocomplete="username" />
+          <mat-error>El usuario es obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="contrasena" autocomplete="current-password" />
+          <mat-error>La contraseña es obligatoria</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button type="submit">Ingresar</button>
+      </form>
+
+      <div class="enlaces-login">
+        <a mat-button routerLink="/recuperar">¿Olvidó su contraseña?</a>
+        <a mat-button routerLink="/registro">Crear cuenta</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

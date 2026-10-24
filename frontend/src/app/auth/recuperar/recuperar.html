@@ -1,0 +1,54 @@
+<div class="login">
+  <mat-card appearance="outlined" class="tarjeta-login">
+    <mat-card-header>
+      <mat-card-title>Recuperar contraseña</mat-card-title>
+      <mat-card-subtitle>Responda su pregunta de seguridad para crear una contraseña nueva</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="formUsuario" (ngSubmit)="buscarPregunta()" class="formulario">
+        <mat-form-field>
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="usuario" autocomplete="username" />
+          <mat-error>El usuario es obligatorio</mat-error>
+        </mat-form-field>
+
+        @if (!pregunta()) {
+          <div class="botones">
+            <a mat-button routerLink="/login">Volver</a>
+            <button mat-flat-button type="submit">Continuar</button>
+          </div>
+        }
+      </form>
+
+      @if (pregunta(); as p) {
+        <form [formGroup]="formRespuesta" (ngSubmit)="restablecer()" class="formulario">
+          <p><strong>{{ p }}</strong></p>
+
+          <mat-form-field>
+            <mat-label>Respuesta</mat-label>
+            <input matInput formControlName="respuesta_seguridad" />
+            <mat-error>La respuesta es obligatoria</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Contraseña nueva</mat-label>
+            <input matInput type="password" formControlName="nueva_contrasena" autocomplete="new-password" />
+            <mat-hint>Mínimo 8 caracteres</mat-hint>
+            <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Confirmar contraseña</mat-label>
+            <input matInput type="password" formControlName="confirmacion" autocomplete="new-password" />
+            <mat-error>Las contraseñas no coinciden</mat-error>
+          </mat-form-field>
+
+          <div class="botones">
+            <button mat-button type="button" (click)="cambiarUsuario()">Cambiar usuario</button>
+            <button mat-flat-button type="submit">Guardar contraseña</button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

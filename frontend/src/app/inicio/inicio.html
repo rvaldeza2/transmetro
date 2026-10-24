@@ -1,0 +1,57 @@
+<h2>Bienvenido, {{ auth.usuario()?.nombre }}</h2>
+
+<div class="indicadores">
+  @for (i of indicadores(); track i.etiqueta) {
+    <a [routerLink]="i.ruta" class="sin-subrayado">
+      <mat-card appearance="outlined" class="indicador">
+        <mat-card-content>
+          <mat-icon [class]="i.alerta ? 'alerta' : 'correcto'">{{ i.icono }}</mat-icon>
+          <div class="valor" [class.alerta]="i.alerta">{{ i.valor }}</div>
+          <div class="etiqueta">{{ i.etiqueta }}</div>
+        </mat-card-content>
+      </mat-card>
+    </a>
+  }
+</div>
+
+@if (resumen(); as r) {
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-header>
+      <mat-card-title>Últimas alertas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="r.ultimas_alertas">
+        <ng-container matColumnDef="fecha_hora">
+          <th mat-header-cell *matHeaderCellDef>Fecha y hora</th>
+          <td mat-cell *matCellDef="let a">{{ a.fecha_hora }}</td>
+        </ng-container>
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let a">{{ a.tipo === 'SOBRECUPO' ? 'Sobrecupo' : 'Espera' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="lugar">
+          <th mat-header-cell *matHeaderCellDef>Estación / Bus</th>
+          <td mat-cell *matCellDef="let a">{{ a.estacion ?? '—' }}{{ a.placa ? ' · ' + a.placa : '' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="mensaje">
+          <th mat-header-cell *matHeaderCellDef>Detalle</th>
+          <td mat-cell *matCellDef="let a">{{ a.mensaje }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let a" [class]="a.atendida ? 'correcto' : 'alerta'">
+            {{ a.atendida ? 'Atendida' : 'Pendiente' }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnasAlertas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnasAlertas"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="columnasAlertas.length">No hay alertas registradas</td>
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-button routerLink="/alertas">Ver todas las alertas</a>
+    </mat-card-actions>
+  </mat-card>
+}

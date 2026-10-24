@@ -1,0 +1,128 @@
+<div class="encabezado">
+  <h2>Visitas del recorrido</h2>
+</div>
+
+@if (puedeRegistrar()) {
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-header>
+      <mat-card-title>Registrar llegada a estación</mat-card-title>
+      <mat-card-subtitle>Si el bus no alcanza el 25% de su capacidad espera 5 minutos adicionales</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="registrar()" class="fila">
+        <mat-form-field>
+          <mat-label>Bus</mat-label>
+          <mat-select formControlName="id_bus" (selectionChange)="seleccionarBus($event.value)">
+            @for (bus of busesConLinea(); track bus.id_bus) {
+              <mat-option [value]="bus.id_bus">{{ bus.placa }} ({{ bus.linea }})</mat-option>
+            }
+          </mat-select>
+          <mat-error>Seleccione un bus</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Estación</mat-label>
+          <mat-select formControlName="id_estacion">
+            @for (e of estacionesRuta(); track e.id_estacion) {
+              <mat-option [value]="e.id_estacion">{{ e.orden_visita }}. {{ e.nombre }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>Seleccione una estación</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Pasajeros a bordo</mat-label>
+          <input matInput type="number" min="0" formControlName="pasajeros" />
+          <mat-error>Ingrese un número mayor o igual a 0</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button type="submit">Registrar</button>
+      </form>
+
+      @if (ultimaVisita(); as v) {
+        <p [class]="v.espera_adicional_min > 0 ? 'alerta' : 'correcto'">
+          {{ v.placa }} en {{ v.estacion }}: {{ v.pasajeros }} de {{ v.capacidad }} pasajeros ({{ v.porcentaje }}%).
+          {{ v.espera_adicional_min > 0
+            ? 'Debe esperar ' + v.espera_adicional_min + ' minutos adicionales.'
+            : 'Continúa su recorrido.' }}
+        </p>
+      }
+    </mat-card-content>
+  </mat-card>
+}
+
+<div class="fila">
+  <mat-form-field>
+    <mat-label>Bus</mat-label>
+    <mat-select [formControl]="filtroBus" (selectionChange)="cargar()">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (bus of buses(); track bus.id_bus) {
+        <mat-option [value]="bus.id_bus">{{ bus.placa }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Fecha</mat-label>
+    <input matInput type="date" [formControl]="filtroFecha" (change)="cargar()" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Buscar</mat-label>
+    <input matInput #filtro (input)="filtrar(filtro.value)" />
+  </mat-form-field>
+
+  <button mat-button type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
+</div>
+
+<table mat-table [dataSource]="tabla" matSort>
+  <ng-container matColumnDef="fecha_hora">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha y hora</th>
+    <td mat-cell *matCellDef="let v">{{ v.fecha_hora }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="placa">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Bus</th>
+    <td mat-cell *matCellDef="let v">{{ v.placa }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="linea">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Línea</th>
+    <td mat-cell *matCellDef="let v">{{ v.linea ?? 'Sin línea' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="estacion">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Estación</th>
+    <td mat-cell *matCellDef="let v">
+      {{ v.orden_visita ? v.orden_visita + '. ' : '' }}{{ v.estacion }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="pasajeros">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Pasajeros</th>
+    <td mat-cell *matCellDef="let v">{{ v.pasajeros }} / {{ v.capacidad }} ({{ v.porcentaje }}%)</td>
+  </ng-container>
+
+  <ng-container matColumnDef="espera">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="espera_adicional_min">Espera adicional</th>
+    <td mat-cell *matCellDef="let v" [class]="v.espera_adicional_min > 0 ? 'alerta' : ''">
+      {{ v.espera_adicional_min > 0 ? v.espera_adicional_min + ' min' : '—' }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let v" class="acciones">
+      @if (puedeEliminar()) {
+        <button mat-icon-button (click)="eliminar(v)"><mat-icon>delete</mat-icon></button>
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="columnas.length">No hay visitas registradas</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />

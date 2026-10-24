@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: transmetro
+    runtime: node
+    plan: free
+    buildCommand: cd frontend && npm ci && npm run build && cd ../backend && npm ci
+    startCommand: node backend/index.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 24.15.0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRA
+        value: 8h
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_SSL
+        value: "true"

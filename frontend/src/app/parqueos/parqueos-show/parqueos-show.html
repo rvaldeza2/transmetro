@@ -1,0 +1,16 @@
+@if (parqueo(); as p) {
+  <div class="encabezado">
+    <h2>Parqueo {{ p.ubicacion }}</h2>
+    <div class="fila">
+      <a mat-button [routerLink]="['/parqueos', 'editar', id]"><mat-icon>edit</mat-icon> Editar</a>
+      <a mat-button routerLink="/parqueos"><mat-icon>arrow_back</mat-icon> Volver</a>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-content>
+      <p><strong>Ubicación:</strong> {{ p.ubicacion }}</p>
+      <p><strong>Estación:</strong> {{ nombreEstacion(p.id_estacion) }}</p>
+    </mat-card-content>
+  </mat-card>
+}

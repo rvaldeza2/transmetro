@@ -1,0 +1,16 @@
+@if (operador(); as o) {
+  <div class="encabezado">
+    <h2>Operador {{ o.nombre }}</h2>
+    <div class="fila">
+      <a mat-button [routerLink]="['/operadores', 'editar', id]"><mat-icon>edit</mat-icon> Editar</a>
+      <a mat-button routerLink="/operadores"><mat-icon>arrow_back</mat-icon> Volver</a>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-content>
+      <p><strong>Nombre:</strong> {{ o.nombre }}</p>
+      <p><strong>Estación:</strong> {{ nombreEstacion(o.id_estacion) }}</p>
+    </mat-card-content>
+  </mat-card>
+}

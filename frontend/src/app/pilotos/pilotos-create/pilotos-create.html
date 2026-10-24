@@ -1,0 +1,39 @@
+<h2>{{ id ? 'Editar piloto' : 'Nuevo piloto' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error>El nombre es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Historial educativo</mat-label>
+    <textarea matInput rows="2" formControlName="historial_educativo"></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Residencia</mat-label>
+    <input matInput formControlName="residencia" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Teléfono</mat-label>
+    <input matInput formControlName="telefono" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Bus asignado</mat-label>
+    <mat-select formControlName="id_bus">
+      <mat-option [value]="null">Sin bus</mat-option>
+      @for (bus of buses(); track bus.id_bus) {
+        <mat-option [value]="bus.id_bus">{{ bus.placa }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="botones">
+    <a mat-button routerLink="/pilotos">Cancelar</a>
+    <button mat-flat-button type="submit">Guardar</button>
+  </div>
+</form>

@@ -1,0 +1,24 @@
+<h2>{{ id ? 'Editar línea' : 'Nueva línea' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error>El nombre es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Municipalidad</mat-label>
+    <mat-select formControlName="id_municipalidad">
+      @for (municipalidad of municipalidades(); track municipalidad.id_municipalidad) {
+        <mat-option [value]="municipalidad.id_municipalidad">{{ municipalidad.nombre }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>La municipalidad es obligatoria</mat-error>
+  </mat-form-field>
+
+  <div class="botones">
+    <a mat-button routerLink="/lineas">Cancelar</a>
+    <button mat-flat-button type="submit">Guardar</button>
+  </div>
+</form>

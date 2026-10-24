@@ -1,0 +1,19 @@
+@if (piloto(); as p) {
+  <div class="encabezado">
+    <h2>Piloto {{ p.nombre }}</h2>
+    <div class="fila">
+      <a mat-button [routerLink]="['/pilotos', 'editar', id]"><mat-icon>edit</mat-icon> Editar</a>
+      <a mat-button routerLink="/pilotos"><mat-icon>arrow_back</mat-icon> Volver</a>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-content>
+      <p><strong>Nombre:</strong> {{ p.nombre }}</p>
+      <p><strong>Historial educativo:</strong> {{ p.historial_educativo ?? 'Sin registrar' }}</p>
+      <p><strong>Residencia:</strong> {{ p.residencia ?? 'Sin registrar' }}</p>
+      <p><strong>Teléfono:</strong> {{ p.telefono ?? 'Sin registrar' }}</p>
+      <p><strong>Bus asignado:</strong> {{ placaBus(p.id_bus) }}</p>
+    </mat-card-content>
+  </mat-card>
+}

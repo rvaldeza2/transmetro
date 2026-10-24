@@ -1,0 +1,56 @@
+@if (estacion(); as e) {
+  <div class="encabezado">
+    <h2>Estación {{ e.nombre }}</h2>
+    <div class="fila">
+      <a mat-button [routerLink]="['/estaciones', 'editar', id]"><mat-icon>edit</mat-icon> Editar</a>
+      <a mat-button routerLink="/estaciones"><mat-icon>arrow_back</mat-icon> Volver</a>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-content>
+      <p><strong>Nombre:</strong> {{ e.nombre }}</p>
+      <p><strong>Municipalidad:</strong> {{ nombreMunicipalidad(e.id_municipalidad) }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-header>
+      <mat-card-title>Líneas que pasan por la estación</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="lineas()">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Línea</th>
+          <td mat-cell *matCellDef="let l">{{ l.nombre }}</td>
+        </ng-container>
+        <ng-container matColumnDef="orden">
+          <th mat-header-cell *matHeaderCellDef>Orden de visita</th>
+          <td mat-cell *matCellDef="let l">{{ l.orden_visita }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnasLineas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnasLineas"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="tarjeta">
+    <mat-card-header>
+      <mat-card-title>Accesos de la estación</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="accesos()">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Acceso</th>
+          <td mat-cell *matCellDef="let a">{{ a.nombre }}</td>
+        </ng-container>
+        <ng-container matColumnDef="guardias">
+          <th mat-header-cell *matHeaderCellDef>Guardias</th>
+          <td mat-cell *matCellDef="let a" [class.alerta]="a.num_guardias === 0">{{ a.num_guardias }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnasAccesos"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnasAccesos"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+}

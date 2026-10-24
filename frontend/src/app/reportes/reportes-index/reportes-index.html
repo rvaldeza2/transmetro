@@ -1,0 +1,197 @@
+<h2>Reportes</h2>
+
+<mat-tab-group>
+  <mat-tab label="Líneas">
+    <mat-form-field>
+      <mat-label>Buscar</mat-label>
+      <input matInput #filtroLineas (input)="filtrar(lineas, filtroLineas.value)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="lineas" matSort #ordenLineas="matSort">
+      <ng-container matColumnDef="linea">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Línea</th>
+        <td mat-cell *matCellDef="let r">{{ r.linea }}</td>
+      </ng-container>
+      <ng-container matColumnDef="municipalidad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipalidad</th>
+        <td mat-cell *matCellDef="let r">{{ r.municipalidad }}</td>
+      </ng-container>
+      <ng-container matColumnDef="distancia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="distancia_total_km">Distancia (km)</th>
+        <td mat-cell *matCellDef="let r">{{ r.distancia_total_km }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estaciones">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estaciones</th>
+        <td mat-cell *matCellDef="let r">{{ r.estaciones }}</td>
+      </ng-container>
+      <ng-container matColumnDef="buses">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Buses</th>
+        <td mat-cell *matCellDef="let r">{{ r.buses }}</td>
+      </ng-container>
+      <ng-container matColumnDef="rango">
+        <th mat-header-cell *matHeaderCellDef>Permitido</th>
+        <td mat-cell *matCellDef="let r">{{ r.minimo }} a {{ r.maximo }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cumple">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cumple</th>
+        <td mat-cell *matCellDef="let r" [class]="r.cumple ? 'correcto' : 'alerta'">{{ r.cumple ? 'Sí' : 'No' }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnasLineas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnasLineas"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="columnasLineas.length">
+          No hay registros que coincidan con "{{ filtroLineas.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator #paginadorLineas [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  </mat-tab>
+
+  <mat-tab label="Estaciones">
+    <mat-form-field>
+      <mat-label>Buscar</mat-label>
+      <input matInput #filtroEstaciones (input)="filtrar(estaciones, filtroEstaciones.value)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="estaciones" matSort #ordenEstaciones="matSort">
+      <ng-container matColumnDef="estacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estación</th>
+        <td mat-cell *matCellDef="let r">{{ r.estacion }}</td>
+      </ng-container>
+      <ng-container matColumnDef="municipalidad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipalidad</th>
+        <td mat-cell *matCellDef="let r">{{ r.municipalidad }}</td>
+      </ng-container>
+      <ng-container matColumnDef="lineas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Líneas</th>
+        <td mat-cell *matCellDef="let r">{{ r.lineas ?? '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="accesos">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Accesos</th>
+        <td mat-cell *matCellDef="let r">
+          {{ r.accesos }}
+          @if (r.accesos_sin_guardia > 0) {
+            <span class="alerta">({{ r.accesos_sin_guardia }} sin guardia)</span>
+          }
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="guardias">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Guardias</th>
+        <td mat-cell *matCellDef="let r">{{ r.guardias }}</td>
+      </ng-container>
+      <ng-container matColumnDef="operadores">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Operadores</th>
+        <td mat-cell *matCellDef="let r">{{ r.operadores }}</td>
+      </ng-container>
+      <ng-container matColumnDef="buses">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="buses_que_la_atienden">Buses que la atienden</th>
+        <td mat-cell *matCellDef="let r">{{ r.buses_que_la_atienden }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnasEstaciones"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnasEstaciones"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="columnasEstaciones.length">
+          No hay registros que coincidan con "{{ filtroEstaciones.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator #paginadorEstaciones [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  </mat-tab>
+
+  <mat-tab label="Buses">
+    <mat-form-field>
+      <mat-label>Buscar</mat-label>
+      <input matInput #filtroBuses (input)="filtrar(buses, filtroBuses.value)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="buses" matSort #ordenBuses="matSort">
+      <ng-container matColumnDef="placa">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Placa</th>
+        <td mat-cell *matCellDef="let r">{{ r.placa }}</td>
+      </ng-container>
+      <ng-container matColumnDef="capacidad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Capacidad</th>
+        <td mat-cell *matCellDef="let r">{{ r.capacidad }}</td>
+      </ng-container>
+      <ng-container matColumnDef="linea">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Línea</th>
+        <td mat-cell *matCellDef="let r">{{ r.linea ?? 'Sin línea' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="parqueo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Parqueo</th>
+        <td mat-cell *matCellDef="let r">{{ r.parqueo }} ({{ r.estacion_parqueo }})</td>
+      </ng-container>
+      <ng-container matColumnDef="pilotos">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Pilotos</th>
+        <td mat-cell *matCellDef="let r">{{ r.pilotos ?? '—' }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnasBuses"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnasBuses"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="columnasBuses.length">
+          No hay registros que coincidan con "{{ filtroBuses.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator #paginadorBuses [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  </mat-tab>
+<mat-tab label="Accesos por línea">
+    <mat-form-field>
+      <mat-label>Buscar</mat-label>
+      <input matInput #filtroAccesosLinea (input)="filtrar(accesosLinea, filtroAccesosLinea.value)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="accesosLinea" matSort #ordenAccesosLinea="matSort">
+      <ng-container matColumnDef="linea">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Línea</th>
+        <td mat-cell *matCellDef="let r">{{ r.linea }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="orden_visita">Estación</th>
+        <td mat-cell *matCellDef="let r">{{ r.orden_visita }}. {{ r.estacion }}</td>
+      </ng-container>
+      <ng-container matColumnDef="acceso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Acceso</th>
+        <td mat-cell *matCellDef="let r">{{ r.acceso }}</td>
+      </ng-container>
+      <ng-container matColumnDef="num_guardias">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Guardias</th>
+        <td mat-cell *matCellDef="let r" [class]="r.num_guardias === 0 ? 'alerta' : ''">{{ r.num_guardias }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnasAccesosLinea"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnasAccesosLinea"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="columnasAccesosLinea.length">
+          No hay registros que coincidan con "{{ filtroAccesosLinea.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator #paginadorAccesosLinea [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons />
+  </mat-tab>
+
+  <mat-tab label="Accesos sin guardia">
+    @if (accesosSinGuardia.data.length === 0) {
+      <p class="correcto">Todos los accesos tienen al menos un guardia asignado.</p>
+    } @else {
+      <p class="alerta">
+        {{ accesosSinGuardia.data.length }} acceso(s) no cumplen la regla de al menos un guardia por acceso.
+      </p>
+      <table mat-table [dataSource]="accesosSinGuardia">
+        <ng-container matColumnDef="estacion">
+          <th mat-header-cell *matHeaderCellDef>Estación</th>
+          <td mat-cell *matCellDef="let r">{{ r.estacion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="acceso">
+          <th mat-header-cell *matHeaderCellDef>Acceso</th>
+          <td mat-cell *matCellDef="let r">{{ r.acceso }}</td>
+        </ng-container>
+        <ng-container matColumnDef="municipalidad">
+          <th mat-header-cell *matHeaderCellDef>Municipalidad</th>
+          <td mat-cell *matCellDef="let r">{{ r.municipalidad }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnasSinGuardia"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnasSinGuardia"></tr>
+      </table>
+    }
+  </mat-tab>
+</mat-tab-group>

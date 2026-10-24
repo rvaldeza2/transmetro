@@ -1,0 +1,24 @@
+<h2>{{ id ? 'Editar operador' : 'Nuevo operador' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" />
+    <mat-error>El nombre es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Estación (computadora asignada)</mat-label>
+    <mat-select formControlName="id_estacion">
+      @for (estacion of estaciones(); track estacion.id_estacion) {
+        <mat-option [value]="estacion.id_estacion">{{ estacion.nombre }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>La estación es obligatoria</mat-error>
+  </mat-form-field>
+
+  <div class="botones">
+    <a mat-button routerLink="/operadores">Cancelar</a>
+    <button mat-flat-button type="submit">Guardar</button>
+  </div>
+</form>
